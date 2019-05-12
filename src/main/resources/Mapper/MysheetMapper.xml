@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.echocloud.mapper.IMysheetDao">
+
+	<insert id="addMysheet" parameterType="Mysheet">
+		<![CDATA[
+			insert into MYSHEET
+(mysheet_id,user_id,mysheet_name)
+				values(#{mysheet_id},#{user_id},#{mysheet_name})
+		]]>
+	</insert>
+
+	<delete id="delMysheet" parameterType="String">
+		<![CDATA[
+			delete from MYSHEET where mysheet_id=#{mysheet_id}
+		]]>
+	</delete>
+
+	<delete id="delMysheets">
+		<![CDATA[
+			delete from MYSHEET where mysheet_id in 
+		]]>
+		<foreach collection="array" item="mysheet_ids"  open="(" separator="," close=")">
+			#{mysheet_ids}
+		</foreach>
+	</delete>
+
+	<update id="updateMysheet" parameterType="Mysheet">
+		<![CDATA[
+			UPDATE MYSHEET
+		]]>
+		<set>
+			<if test="mysheet_name!=null and mysheet_name!=''">
+			<![CDATA[
+				mysheet_name = #{mysheet_name}
+			]]>
+			</if>
+		</set>
+		<![CDATA[
+			where mysheet_id = #{mysheet_id}
+		]]>
+	</update>
+
+	<select id="getMysheet" parameterType="Mysheet" resultType="Mysheet">
+		<![CDATA[
+			SELECT t.*
+			  FROM MYSHEET t 
+		]]>
+		<where>
+			<if test="mysheet_id!=null and mysheet_id!=''">
+			<![CDATA[
+				mysheet_id = #{mysheet_id}
+			]]>
+			</if>
+			<if test="mysheet_name!=null and mysheet_name!=''">
+			<![CDATA[
+				and mysheet_name = #{mysheet_name}
+			]]>
+			</if>
+		</where>
+	</select>
+
+	<select id="listMysheets" parameterType="Mysheet" resultType="Mysheet">
+		<![CDATA[
+			select b.* from (SELECT a.*,rownum rn FROM (
+			SELECT t.*
+			  FROM MYSHEET t 
+		]]>
+		<where>
+			<if test="mysheet_id!=null and mysheet_id!=''">
+			<![CDATA[
+				mysheet_id = #{mysheet_id}
+			]]>
+			</if>
+			<if test="user_id!=null and user_id!=''">
+			<![CDATA[
+				and user_id = #{user_id}
+			]]>
+			</if>
+			<if test="mysheet_name!=null and mysheet_name!=''">
+			<![CDATA[
+				and mysheet_name like '%${mysheet_name}%'
+			]]>
+			</if>
+		</where>
+		<![CDATA[
+			order by mysheet_id asc) a) b
+		]]>
+		<if test="start!=-1">
+		<![CDATA[
+			where b.rn between ${start+1} and ${end}
+		]]>
+		</if>
+	</select>
+
+	<select id="listMysheetsCount" parameterType="Mysheet" resultType="int">
+		<![CDATA[
+			SELECT count(*) FROM MYSHEET t
+		]]>
+		<where>
+			<if test="mysheet_id!=null and mysheet_id!=''">
+			<![CDATA[
+				mysheet_id = #{mysheet_id}
+			]]>
+			</if>
+			<if test="user_id!=null and user_id!=''">
+			<![CDATA[
+				and user_id = #{user_id}
+			]]>
+			</if>
+			<if test="mysheet_name!=null and mysheet_name!=''">
+			<![CDATA[
+				and mysheet_name like '%${mysheet_name}%'
+			]]>
+			</if>
+		</where>
+	</select>
+
+</mapper>

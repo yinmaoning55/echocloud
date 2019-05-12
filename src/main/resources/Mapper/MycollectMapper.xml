@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.echocloud.mapper.IMycollectDao">
+
+	<insert id="addMycollect" parameterType="Mycollect">
+		<![CDATA[
+			insert into MYCOLLECT
+(mycollect_id,user_id,mysheet_id,music_id,mycollect_date)
+				values(#{mycollect_id},#{user_id},#{mysheet_id},#{music_id},#{mycollect_date})
+		]]>
+	</insert>
+
+	<delete id="delMycollect" parameterType="String">
+		<![CDATA[
+			delete from MYCOLLECT where mycollect_id=#{mycollect_id}
+		]]>
+	</delete>
+
+	<delete id="delMycollects">
+		<![CDATA[
+			delete from MYCOLLECT where mycollect_id in 
+		]]>
+		<foreach collection="array" item="mycollect_ids"  open="(" separator="," close=")">
+			#{mycollect_ids}
+		</foreach>
+	</delete>
+
+	<update id="updateMycollect" parameterType="Mycollect">
+		<![CDATA[
+			UPDATE MYCOLLECT
+		]]>
+		<set>
+			<if test="">
+			<![CDATA[
+				
+			]]>
+			</if>
+		</set>
+		<![CDATA[
+			where mycollect_id = #{mycollect_id}
+		]]>
+	</update>
+
+	<select id="getMycollect" parameterType="Mycollect" resultType="Mycollect">
+		<![CDATA[
+			SELECT t.*,ms.mysheet_name,m.music_name,m.music_name2,m.pic_name,m.lrc_name,
+				   m.music_author,m.music_album,m.music_collect
+			  FROM MYCOLLECT t 
+			  join users u on t.user_id=u.user_id
+			  join mysheet ms on t.mysheet_id=ms.mysheet_id
+			  join music m on t.music_id=m.music_id
+		]]>
+		<where>
+			<if test="mycollect_id!=null and mycollect_id!=''">
+			<![CDATA[
+				mycollect_id = #{mycollect_id}
+			]]>
+			</if>
+			<if test="user_id!=null and user_id!=''">
+			<![CDATA[
+				and t.user_id = #{user_id}
+			]]>
+			</if>
+			<if test="mysheet_id!=null and mysheet_id!=''">
+			<![CDATA[
+				and t.mysheet_id = #{mysheet_id}
+			]]>
+			</if>
+			<if test="music_id!=null and music_id!=''">
+			<![CDATA[
+				and t.music_id = #{music_id}
+			]]>
+			</if>
+		</where>
+	</select>
+
+	<select id="listMycollects" parameterType="Mycollect" resultType="Mycollect">
+		<![CDATA[
+			select b.* from (SELECT a.*,rownum rn FROM (
+			SELECT t.*,ms.mysheet_name,m.music_name,m.music_name2,m.pic_name,m.lrc_name,
+				   m.music_author,m.music_album,m.music_collect
+			  FROM MYCOLLECT t 
+			  join users u on t.user_id=u.user_id
+			  join mysheet ms on t.mysheet_id=ms.mysheet_id
+			  join music m on t.music_id=m.music_id
+		]]>
+		<where>
+			<if test="mycollect_id!=null and mycollect_id!=''">
+			<![CDATA[
+				mycollect_id = #{mycollect_id}
+			]]>
+			</if>
+			<if test="user_id!=null and user_id!=''">
+			<![CDATA[
+				and t.user_id = #{user_id}
+			]]>
+			</if>
+			<if test="mysheet_id!=null and mysheet_id!=''">
+			<![CDATA[
+				and t.mysheet_id = #{mysheet_id}
+			]]>
+			</if>
+			<if test="music_id!=null and music_id!=''">
+			<![CDATA[
+				and t.music_id = #{music_id}
+			]]>
+			</if>
+			<if test="music_name!=null and music_name!=''">
+			<![CDATA[
+				and music_name like '%${music_name}%'
+			]]>
+			</if>
+			<if test="music_name2!=null and music_name2!=''">
+			<![CDATA[
+				and music_name2 like '%${music_name2}%'
+			]]>
+			</if>
+			<if test="music_author!=null and music_author!=''">
+			<![CDATA[
+				and music_author like '%${music_author}%'
+			]]>
+			</if>
+			<if test="music_album!=null and music_album!=''">
+			<![CDATA[
+				and music_album like '%${music_album}%'
+			]]>
+			</if>
+			<if test="all_name!=null and all_name!=''">
+			<![CDATA[
+				and (music_name like '%${all_name}%' or music_author like '%${all_name}%' or music_album like '%${all_name}%')
+			]]>
+			</if>
+		</where>
+		<![CDATA[
+			order by music_name asc,mycollect_id asc) a) b
+		]]>
+		<if test="start!=-1">
+		<![CDATA[
+			where b.rn between ${start+1} and ${end}
+		]]>
+		</if>
+	</select>
+
+	<select id="listMycollectsCount" parameterType="Mycollect" resultType="int">
+		<![CDATA[
+			SELECT count(*)
+			  FROM MYCOLLECT t 
+			  join users u on t.user_id=u.user_id
+			  join mysheet ms on t.mysheet_id=ms.mysheet_id
+			  join music m on t.music_id=m.music_id
+		]]>
+		<where>
+			<if test="mycollect_id!=null and mycollect_id!=''">
+			<![CDATA[
+				mycollect_id = #{mycollect_id}
+			]]>
+			</if>
+			<if test="user_id!=null and user_id!=''">
+			<![CDATA[
+				and t.user_id = #{user_id}
+			]]>
+			</if>
+			<if test="mysheet_id!=null and mysheet_id!=''">
+			<![CDATA[
+				and t.mysheet_id = #{mysheet_id}
+			]]>
+			</if>
+			<if test="music_id!=null and music_id!=''">
+			<![CDATA[
+				and t.music_id = #{music_id}
+			]]>
+			</if>
+			<if test="music_name!=null and music_name!=''">
+			<![CDATA[
+				and music_name like '%${music_name}%'
+			]]>
+			</if>
+			<if test="music_name2!=null and music_name2!=''">
+			<![CDATA[
+				and music_name2 like '%${music_name2}%'
+			]]>
+			</if>
+			<if test="music_author!=null and music_author!=''">
+			<![CDATA[
+				and music_author like '%${music_author}%'
+			]]>
+			</if>
+			<if test="music_album!=null and music_album!=''">
+			<![CDATA[
+				and music_album like '%${music_album}%'
+			]]>
+			</if>
+			<if test="all_name!=null and all_name!=''">
+			<![CDATA[
+				and (music_name like '%${all_name}%' or music_author like '%${all_name}%' or music_album like '%${all_name}%')
+			]]>
+			</if>
+		</where>
+	</select>
+
+</mapper>

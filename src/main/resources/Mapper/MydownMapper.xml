@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.echocloud.mapper.IMydownDao">
+
+	<insert id="addMydown" parameterType="Mydown">
+		<![CDATA[
+			insert into MYDOWN
+(mydown_id,user_id,music_id,mydown_date)
+				values(#{mydown_id},#{user_id},#{music_id},#{mydown_date})
+		]]>
+	</insert>
+
+	<delete id="delMydown" parameterType="String">
+		<![CDATA[
+			delete from MYDOWN where mydown_id=#{mydown_id}
+		]]>
+	</delete>
+
+	<delete id="delMydowns">
+		<![CDATA[
+			delete from MYDOWN where mydown_id in 
+		]]>
+		<foreach collection="array" item="mydown_ids"  open="(" separator="," close=")">
+			#{mydown_ids}
+		</foreach>
+	</delete>
+
+	<update id="updateMydown" parameterType="Mydown">
+		<![CDATA[
+			UPDATE MYDOWN
+		]]>
+		<set>
+			<if test="">
+			<![CDATA[
+				
+			]]>
+			</if>
+		</set>
+		<![CDATA[
+			where mydown_id = #{mydown_id}
+		]]>
+	</update>
+
+	<select id="getMydown" parameterType="Mydown" resultType="Mydown">
+		<![CDATA[
+			SELECT t.*,m.music_name,m.music_name2,m.pic_name,m.lrc_name,
+				   m.music_author,m.music_album,m.music_collect
+			  FROM MYDOWN t 
+			  join users u on t.user_id=u.user_id
+			  join music m on t.music_id=m.music_id
+		]]>
+		<where>
+			<if test="mydown_id!=null and mydown_id!=''">
+			<![CDATA[
+				mydown_id = #{mydown_id}
+			]]>
+			</if>
+			<if test="user_id!=null and user_id!=''">
+			<![CDATA[
+				and t.user_id = #{user_id}
+			]]>
+			</if>
+			<if test="music_id!=null and music_id!=''">
+			<![CDATA[
+				and t.music_id = #{music_id}
+			]]>
+			</if>
+		</where>
+	</select>
+
+	<select id="listMydowns" parameterType="Mydown" resultType="Mydown">
+		<![CDATA[
+			select b.* from (SELECT a.*,rownum rn FROM (
+			SELECT t.*,m.music_name,m.music_name2,m.pic_name,m.lrc_name,
+				   m.music_author,m.music_album,m.music_collect
+			  FROM MYDOWN t 
+			  join users u on t.user_id=u.user_id
+			  join music m on t.music_id=m.music_id
+		]]>
+		<where>
+			<if test="mydown_id!=null and mydown_id!=''">
+			<![CDATA[
+				mydown_id = #{mydown_id}
+			]]>
+			</if>
+			<if test="user_id!=null and user_id!=''">
+			<![CDATA[
+				and t.user_id = #{user_id}
+			]]>
+			</if>
+			<if test="music_id!=null and music_id!=''">
+			<![CDATA[
+				and t.music_id = #{music_id}
+			]]>
+			</if>
+			<if test="music_name!=null and music_name!=''">
+			<![CDATA[
+				and music_name like '%${music_name}%'
+			]]>
+			</if>
+			<if test="music_name2!=null and music_name2!=''">
+			<![CDATA[
+				and music_name2 like '%${music_name2}%'
+			]]>
+			</if>
+			<if test="music_author!=null and music_author!=''">
+			<![CDATA[
+				and music_author like '%${music_author}%'
+			]]>
+			</if>
+			<if test="music_album!=null and music_album!=''">
+			<![CDATA[
+				and music_album like '%${music_album}%'
+			]]>
+			</if>
+			<if test="all_name!=null and all_name!=''">
+			<![CDATA[
+				and (music_name like '%${all_name}%' or music_author like '%${all_name}%' or music_album like '%${all_name}%')
+			]]>
+			</if>
+		</where>
+		<![CDATA[
+			order by music_name asc,mydown_id asc) a) b
+		]]>
+		<if test="start!=-1">
+		<![CDATA[
+			where b.rn between ${start+1} and ${end}
+		]]>
+		</if>
+	</select>
+
+	<select id="listMydownsCount" parameterType="Mydown" resultType="int">
+		<![CDATA[
+			SELECT count(*) FROM MYDOWN t
+			  join users u on t.user_id=u.user_id
+			  join music m on t.music_id=m.music_id
+		]]>
+		<where>
+			<if test="mydown_id!=null and mydown_id!=''">
+			<![CDATA[
+				mydown_id = #{mydown_id}
+			]]>
+			</if>
+			<if test="user_id!=null and user_id!=''">
+			<![CDATA[
+				and t.user_id = #{user_id}
+			]]>
+			</if>
+			<if test="music_id!=null and music_id!=''">
+			<![CDATA[
+				and t.music_id = #{music_id}
+			]]>
+			</if>
+			<if test="music_name!=null and music_name!=''">
+			<![CDATA[
+				and music_name like '%${music_name}%'
+			]]>
+			</if>
+			<if test="music_name2!=null and music_name2!=''">
+			<![CDATA[
+				and music_name2 like '%${music_name2}%'
+			]]>
+			</if>
+			<if test="music_author!=null and music_author!=''">
+			<![CDATA[
+				and music_author like '%${music_author}%'
+			]]>
+			</if>
+			<if test="music_album!=null and music_album!=''">
+			<![CDATA[
+				and music_album like '%${music_album}%'
+			]]>
+			</if>
+			<if test="all_name!=null and all_name!=''">
+			<![CDATA[
+				and (music_name like '%${all_name}%' or music_author like '%${all_name}%' or music_album like '%${all_name}%')
+			]]>
+			</if>
+		</where>
+	</select>
+
+</mapper>

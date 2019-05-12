@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.echocloud.mapper.IMusicDao">
+
+	<insert id="addMusic" parameterType="Music">
+		<![CDATA[
+			insert into MUSIC
+(music_id,music_name,music_name2,pic_name,lrc_name,music_author,music_album,music_collect,music_date,music_desc)
+				values(#{music_id},#{music_name},#{music_name2,jdbcType=VARCHAR},#{pic_name,jdbcType=VARCHAR},#{lrc_name,jdbcType=VARCHAR},#{music_author},#{music_album},#{music_collect},#{music_date},#{music_desc})
+		]]>
+	</insert>
+
+	<delete id="delMusic" parameterType="String">
+		<![CDATA[
+			delete from MUSIC where music_id=#{music_id}
+		]]>
+	</delete>
+
+	<delete id="delMusics">
+		<![CDATA[
+			delete from MUSIC where music_id in 
+		]]>
+		<foreach collection="array" item="music_ids"  open="(" separator="," close=")">
+			#{music_ids}
+		</foreach>
+	</delete>
+
+	<update id="updateMusic" parameterType="Music">
+		<![CDATA[
+			UPDATE MUSIC
+		]]>
+		<set>
+			<if test="music_name!=null and music_name!=''">
+			<![CDATA[
+				music_name = #{music_name},
+			]]>
+			</if>
+			<if test="music_name2!=null and music_name2!=''">
+			<![CDATA[
+				music_name2 = #{music_name2},
+			]]>
+			</if>
+			<if test="pic_name!=null and pic_name!=''">
+			<![CDATA[
+				pic_name = #{pic_name},
+			]]>
+			</if>
+			<if test="lrc_name!=null and lrc_name!=''">
+			<![CDATA[
+				lrc_name = #{lrc_name},
+			]]>
+			</if>
+			<if test="music_author!=null and music_author!=''">
+			<![CDATA[
+				music_author = #{music_author},
+			]]>
+			</if>
+			<if test="music_album!=null and music_album!=''">
+			<![CDATA[
+				music_album = #{music_album},
+			]]>
+			</if>
+			<if test="music_collect!=0">
+			<![CDATA[
+				music_collect = #{music_collect},
+			]]>
+			</if>
+			<if test="music_desc!=null and music_desc!=''">
+			<![CDATA[
+				music_desc = #{music_desc}
+			]]>
+			</if>
+		</set>
+		<![CDATA[
+			where music_id = #{music_id}
+		]]>
+	</update>
+
+	<select id="getMusic" parameterType="Music" resultType="Music">
+		<![CDATA[
+			SELECT t.*
+			  FROM MUSIC t 
+		]]>
+		<where>
+			<if test="music_id!=null and music_id!=''">
+			<![CDATA[
+				music_id = #{music_id}
+			]]>
+			</if>
+		</where>
+	</select>
+
+	<select id="listMusics" parameterType="Music" resultType="Music">
+		<![CDATA[
+			select b.* from (SELECT a.*,rownum rn FROM (
+			SELECT t.*
+			  FROM MUSIC t 
+		]]>
+		<where>
+			<if test="music_id!=null and music_id!=''">
+			<![CDATA[
+				music_id = #{music_id}
+			]]>
+			</if>
+			<if test="music_name!=null and music_name!=''">
+			<![CDATA[
+				and music_name like '%${music_name}%'
+			]]>
+			</if>
+			<if test="music_name2!=null and music_name2!=''">
+			<![CDATA[
+				and music_name2 like '%${music_name2}%'
+			]]>
+			</if>
+			<if test="music_author!=null and music_author!=''">
+			<![CDATA[
+				and music_author like '%${music_author}%'
+			]]>
+			</if>
+			<if test="music_album!=null and music_album!=''">
+			<![CDATA[
+				and music_album like '%${music_album}%'
+			]]>
+			</if>
+			<if test="all_name!=null and all_name!=''">
+			<![CDATA[
+				and (music_name like '%${all_name}%' or music_author like '%${all_name}%' or music_album like '%${all_name}%')
+			]]>
+			</if>
+		</where>
+		<![CDATA[
+			order by music_name,music_id asc) a) b
+		]]>
+		<if test="start!=-1">
+		<![CDATA[
+			where b.rn between ${start+1} and ${end}
+		]]>
+		</if>
+	</select>
+
+	<select id="listMusicsCount" parameterType="Music" resultType="int">
+		<![CDATA[
+			SELECT count(*) FROM MUSIC
+		]]>
+		<where>
+			<if test="music_id!=null and music_id!=''">
+			<![CDATA[
+				music_id = #{music_id}
+			]]>
+			</if>
+			<if test="music_name!=null and music_name!=''">
+			<![CDATA[
+				and music_name like '%${music_name}%'
+			]]>
+			</if>
+			<if test="music_name2!=null and music_name2!=''">
+			<![CDATA[
+				and music_name2 like '%${music_name2}%'
+			]]>
+			</if>
+			<if test="music_author!=null and music_author!=''">
+			<![CDATA[
+				and music_author like '%${music_author}%'
+			]]>
+			</if>
+			<if test="music_album!=null and music_album!=''">
+			<![CDATA[
+				and music_album like '%${music_album}%'
+			]]>
+			</if>
+			<if test="all_name!=null and all_name!=''">
+			<![CDATA[
+				and (music_name like '%${all_name}%' or music_author like '%${all_name}%' or music_album like '%${all_name}%')
+			]]>
+			</if>
+		</where>
+	</select>
+
+</mapper>

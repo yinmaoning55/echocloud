@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <settings>
+        <!--主键自增，开启会主键自增，Oracle不支持主键自增，所以禁用-->
+        <!--<setting name="useGeneratedKeys" value="true"/>-->
+
+        <setting name="useColumnLabel" value="true"/>
+
+        <!--开启驼峰转换，本项目不存在，所以不用-->
+        <!--<setting name="mapUnderscoreToCamelCase" value="true"/>-->
+
+
+
+
+
+    </settings>
+
+    <typeAliases>
+
+        <package name="com.example.echocloud.domain"></package>
+    </typeAliases>
+
+
+</configuration>

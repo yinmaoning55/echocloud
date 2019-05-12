@@ -1,0 +1,45 @@
+server:
+  port: 8088
+  servlet:
+    context-path: /echo
+  tomcat:
+    max-http-post-size: 0
+
+spring:
+  datasource:
+
+      username: gvoice
+      password: sa
+      url: jdbc:oracle:thin:@127.0.0.1:1521:orcl
+      driver-class-name: oracle.jdbc.driver.OracleDriver
+
+
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/main/java
+      additional-exclude: static
+  thymeleaf:
+    cache: false
+    enabled: false
+  mvc:
+      view:
+        # 页面默认前缀目录
+        prefix: /
+        # 响应页面默认后缀
+        suffix: .jsp
+
+
+
+
+mybatis:
+  config-location: mybatis-config.xml
+  mapper-locations: /Mapper/*.xml
+  type-aliases-package: com.example.echocloud.domain
+
+
+hbaseClient:
+  zookeeperPort: 2181
+  zookeeperQuorum: 192.168.247.10:2181
+
+
